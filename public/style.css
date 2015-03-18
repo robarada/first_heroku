@@ -1,0 +1,78 @@
+.menuBtn {
+  background-color: transparent;
+  border: none;
+  height: 380px;
+  margin: 16px;
+  width: 36px;
+} 
+md-toolbar h1 {
+  font-size: 1.250em;
+  font-weight: 550;
+  margin: left;
+}
+
+md-sidenav, 
+md-sidenav.md-locked-open, 
+md-sidenav.md-closed.md-locked-open-add-active {
+    max-width: 42%;
+    min-width: 42%;
+    width: 42%;
+} 
+
+.topcorner{
+   position:absolute;
+   top:15px;
+   right: 10%;
+  }
+  
+  #map-canvas {
+		position: absolute;
+		top: 3px;
+		left: 0px;
+        display: block;
+		height: 99.5%;
+		width: 100%;
+		z-index: 1;
+      }
+ 
+ .login{
+   position:absolute;
+   top:-15px;
+   right: 7%;
+   }
+ 
+ 
+
+.face {
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  width: 48px;
+  margin: 16px; }
+
+md-list .md-button {
+  color: inherit;
+  font-weight: 500;
+  text-align: right;
+  width: 100%;
+}
+h1.text_enlarge {
+    position: relative;
+    left: 40px;
+}
+.visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0; 
+  width: 1px;
+}
+
+
+/* Using Data-URI converted from svg until <md-icon> becomes available 
+https://github.com/google/material-design-icons
+*/
+.menuBtn {
+  background: transparent url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIyNHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI0IDI0IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGcgaWQ9IkhlYWRlciI+CiAgICA8Zz4KICAgICAgICA8cmVjdCB4PSItNjE4IiB5PSItMjIzMiIgZmlsbD0ibm9uZSIgd2lkdGg9IjE0MDAiIGhlaWdodD0iMzYwMCIvPgogICAgPC9nPgo8L2c+CjxnIGlkPSJMYWJlbCI+CjwvZz4KPGcgaWQ9Ikljb24iPgogICAgPGc+CiAgICAgICAgPHJlY3QgZmlsbD0ibm9uZSIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ii8+CiAgICAgICAgPHBhdGggZD0iTTMsMThoMTh2LTJIM1YxOHogTTMsMTNoMTh2LTJIM1YxM3ogTTMsNnYyaDE4VjZIM3oiIHN0eWxlPSJmaWxsOiNmM2YzZjM7Ii8+CiAgICA8L2c+CjwvZz4KPGcgaWQ9IkdyaWQiIGRpc3BsYXk9Im5vbmUiPgogICAgPGcgZGlzcGxheT0iaW5saW5lIj4KICAgIDwvZz4KPC9nPgo8L3N2Zz4=) no-repeat  center center;
+}

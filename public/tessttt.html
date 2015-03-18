@@ -1,0 +1,428 @@
+
+<!doctype html>
+<html>
+
+<head>
+
+  <title>UK Charge Points</title>
+
+  <meta name="viewport"
+  content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.js" type="text/javascript"></script>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css" type="text/css">
+
+  <link rel="import"
+    href="/bower_components/font-roboto/roboto.html">
+
+  <link rel="import"
+    href="/bower_components/core-header-panel/core-header-panel.html">
+  <link rel="import"
+    href="/bower_components/core-drawer-panel/core-drawer-panel.html">
+  <link rel="import"
+    href="/bower_components/core-toolbar/core-toolbar.html">
+  <link rel="import"
+    href="/bower_components/core-list/core-list.html">
+  <link rel="import"
+    href="/bower_components/core-item/core-item.html">
+  <link rel="import"
+    href="/bower_components/core-collapse/core-collapse.html">
+  <link rel="import"
+    href="/bower_components/core-icon-button/core-icon-button.html">
+  <link rel="import"
+    href="/bower_components/paper-button/paper-button.html">
+  <link rel="import"
+    href="/bower_components/paper-ripple/paper-ripple.html">
+  <link rel="import"
+    href="/bower_components/paper-fab/paper-fab.html">
+  <link rel="import"
+    href="/bower_components/paper-dialog/paper-dialog.html">
+  <link rel="import"
+    href="/bower_components/paper-dialog/paper-action-dialog.html">
+  <link rel="import"
+    href="/bower_components/paper-slider/paper-slider.html">
+  <link rel="import"
+    href="/bower_components/paper-spinner/paper-spinner.html">
+  <link rel="import"
+    href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+  <link rel="import"
+    href="/bower_components/core-icons/maps-icons.html">
+  <link rel="import"
+    href="/bower_components/google-map/google-map.html">
+  <link rel="import"
+    href="/bower_components/core-ajax/core-ajax.html">
+
+  <style>
+  html,body {
+    height: 100%;
+    margin: 0;
+    background-color: #F2F5F5;
+    font-family: 'RobotoDraft', sans-serif;
+  }
+  div#title {
+    font-size: 16pt;
+  }
+  @media screen and (max-width: 640px){
+    div#title {
+      font-size: 14pt;
+    }
+  }
+  @media screen and (max-width: 320px){
+    div#title {
+      font-size: 10pt;
+    }
+  }
+  core-header-panel#main {
+    height: 100%;
+    overflow: auto;
+  }
+  core-toolbar {
+    background: #6DC9CA;
+    color: white;
+  }
+  paper-spinner::shadow .circle {
+    border-color: #db4437;
+  }
+  core-icon-button {
+    color:white;
+  }
+  core-drawer-panel #drawer {
+    background: #F2F5F5;
+    color: #666666;
+    height: 100%;
+    overflow: auto;
+  }
+  google-map {
+    display: block;
+    height: 600px;
+  }
+  paper-slider {
+    width: 100%;
+  }
+  paper-dialog {
+    background: #F2F5F5;
+    color: #666666;
+  }
+  #settings-button {
+    background: #6DC9CA;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+  }
+  #info-button {
+    background: #6DC9CA;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+  }
+  paper-slider {
+    width: 160px;
+  }
+  paper-button {
+    background: #6DC9CA;
+    color: white;
+  }
+  #info-dialog pre {
+    overflow-x:auto;
+  }
+  core-toolbar#item-count {
+    background-color: #666666;
+    color: #F2F5F5;
+  }
+  core-icon {
+    margin: 0 0 0 0 ! important;
+  }
+  google-map {
+    display: block;
+    height: 100%;
+  }
+  core-list .row {
+    margin: 5px;
+    cursor: pointer;
+  }
+  div#ogl {
+    padding: 1px 0 1px 0;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    color: #333333;
+    background: #FFFFFF;
+    font-size: 8pt;
+  }
+  </style>
+
+</head>
+
+<body unresolved>
+  <core-header-panel id="main">
+
+    <core-toolbar>
+      <paper-spinner id="spinner"></paper-spinner>
+      <div flex id="title">UK Charge Points</div>
+      <core-icon-button icon="maps:my-location" id="locate"></core-icon-button>
+      <core-icon-button icon="refresh" id="refresh"></core-icon-button>
+      <core-icon-button icon="list" id="drawer-toggle"></core-icon-button>
+    </core-toolbar>
+
+    <core-drawer-panel rightDrawer>
+      <core-header-panel drawer id="drawer" mode="waterfall">
+        <core-toolbar id="item-count"></core-toolbar>
+        <core-list id="list" runwayFactor="50" on-core-activate="alert" fit>
+          <template>
+            <div class="row {{ {selected: selected} | tokenList }}">
+              <core-item id="item-{{model.value.ChargeDeviceId}}" label="{{model.value.ChargeDeviceName}}"></core-item>
+              <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
+            </div>
+          </template>
+        </core-list>
+      </core-header-panel>
+      <div main>
+        <google-map ></google-map>
+      </div>
+    </core-drawer-panel>
+
+    <paper-action-dialog heading="Search Settings" id="settings-dialog">
+      <br>
+      <div center horizontal layout justified>
+        <div>Min Output kW</div>
+        <paper-slider id="min-kw" min="0" max="50" value="0" pin flex></paper-slider>
+      </div>
+      <br>
+      <div center horizontal layout justified>
+        <div>Open 24 Hours</div>
+        <paper-toggle-button id="24-hrs-only"></paper-toggle-button>
+      </div>
+      <br>
+      <div center horizontal layout justified>
+        <div>Free Only</div>
+        <paper-toggle-button id="free-only"></paper-toggle-button>
+      </div>
+      <paper-button dismissive>Cancel</paper-button>
+      <paper-button affirmative>Apply</paper-button>
+    </paper-action-dialog>
+
+    <paper-dialog heading="Orchestrate Query Parameters" id="info-dialog"></paper-dialog>
+
+    <div id="ogl">Contains public sector information licensed under the Open Government Licence v3.0.</div>
+    <paper-fab icon="settings" id="settings-button"></paper-fab>
+    <paper-fab icon="info-outline" id="info-button"></paper-fab>
+
+  </core-header-panel>
+  <core-ajax
+    url="/api/ChargePoints"
+    handleAs="json">
+  </core-ajax>
+  <script>
+    var chargePointsApi = document.querySelector('core-ajax');
+
+    var map = document.querySelector('google-map');
+    map.latitude = 51.48;
+    map.longitude = 0;
+
+    var drawer = document.querySelector('core-drawer-panel');
+    var list = document.getElementById('list');
+    var itemCount = document.getElementById('item-count');
+
+    var drawerToggleButton = document.getElementById('drawer-toggle');
+
+    var settingsDialog = document.getElementById('settings-dialog');
+    var settingsButton = document.getElementById('settings-button');
+
+    var infoDialog = document.getElementById('info-dialog');
+    var infoButton = document.getElementById('info-button');
+
+    var minkW = 0;
+    var minkWSlider = document.getElementById('min-kw');
+    var twentyFourHrsOnly = false;
+    var twentyFourHrsOnlyToggle = document.getElementById('24-hrs-only');
+    var freeOnly = false;
+    var freeOnlyToggle = document.getElementById('free-only');
+
+    var spinner = document.getElementById('spinner');
+
+    map.addEventListener('google-map-ready', function(e) {
+      google.maps.event.addListener(map.map, 'idle', function() {
+        loadChargePoints(map);
+      });
+    });
+
+    settingsDialog.querySelector('paper-button[affirmative]').addEventListener('click', function(e) {
+      minkW = minkWSlider.value;
+      twentyFourHrsOnly = twentyFourHrsOnlyToggle.checked;
+      freeOnly = freeOnlyToggle.checked;
+
+      loadChargePoints(map);
+    });
+
+    settingsDialog.querySelector('paper-button[dismissive]').addEventListener('click', function(e) {
+      minkWSlider.value = minkW;
+      twentyFourHrsOnlyToggle.checked = twentyFourHrsOnly;
+      freeOnlyToggle.checked = freeOnly;
+    });
+
+    list.addEventListener('core-activate', function(e) {
+      var deviceId = e.detail.data.value.ChargeDeviceId;
+      var marker = document.getElementById("marker-" + deviceId);
+      marker.info.open(map.map, marker.marker);
+      drawer.closeDrawer();
+      map.resize();
+    });
+
+    settingsButton.addEventListener('click', function(e) {
+      settingsDialog.toggle();
+    });
+
+    infoButton.addEventListener('click', function(e) {
+      infoDialog.innerHTML = "<pre>"+JSON.stringify(chargePointsApi.params, jsonReplacer, "  ")+"</pre>";
+      infoDialog.toggle();
+    });
+
+    drawer.addEventListener('core-responsive-change', function(e) {
+      drawerToggleButton.hidden = !e.detail.narrow;
+    });
+
+    chargePointsApi.addEventListener('core-response', function(e) {
+      clear();
+
+      list.data = chargePointsApi.response != null ? chargePointsApi.response.results : [];
+
+      var count = list.data ? list.data.length : 0;
+      itemCount.innerHTML= "<div>" + count + " result" + (count != 1 ? "s" : "") + "</div>";
+
+      for (i in chargePointsApi.response.results) {
+        var result = chargePointsApi.response.results[i].value;
+
+        if (result.ChargeDeviceLocation.Latitude == null || result.ChargeDeviceLocation.Longitude == null) continue;
+
+        var marker = document.createElement('google-map-marker');
+        marker.latitude = result.ChargeDeviceLocation.Latitude;
+        marker.longitude = result.ChargeDeviceLocation.Longitude;
+        marker.id = "marker-"+result.ChargeDeviceId;
+        marker.title = result.ChargeDeviceName;
+        marker.innerHTML = '<a href="#" onclick="openDetailsDialog(\''+result.ChargeDeviceId+'\')">'+result.ChargeDeviceName+'</a>';
+        marker.details = result;
+
+        map.appendChild(marker);
+      }
+      map.fitToMarkers = true;
+      map.fitToMarkers = false;
+      spinner.active = false;
+    });
+
+    function openDetailsDialog(chargeDeviceId) {
+      var result = document.getElementById("marker-"+chargeDeviceId).details;
+      var dialog = document.createElement('paper-dialog');
+      dialog.heading = result.ChargeDeviceName;
+      var details = document.createElement('pre');
+      details.class = "prettyprint";
+      details.innerText = JSON.stringify(result, jsonReplacer, '  ');
+      dialog.appendChild(details);
+      document.getElementById('main').appendChild(dialog);
+      dialog.toggle();
+    }
+
+    function clear() {
+      map.clear();
+      list.data = [];
+    }
+
+    var boundingBoxUK = {
+      north: 60.854691,
+      east: 1.768960,
+      south: 49.162090,
+      west: -13.413930
+    };
+
+    function intersectsUK(bounds) {
+      var ne = new google.maps.LatLng(boundingBoxUK.north, boundingBoxUK.east);
+      var sw = new google.maps.LatLng(boundingBoxUK.south, boundingBoxUK.west);
+      var ukBounds = new google.maps.LatLngBounds(sw, ne);
+
+      return ukBounds.intersects(bounds);
+    }
+
+    function inUK(coords) {
+      var ne = new google.maps.LatLng(boundingBoxUK.north, boundingBoxUK.east);
+      var sw = new google.maps.LatLng(boundingBoxUK.south, boundingBoxUK.west);
+      var ukBounds = new google.maps.LatLngBounds(sw, ne);
+
+      var latlng = new google.maps.LatLng(coords.latitude, coords.longitude);
+      return ukBounds.contains(latlng);
+    }
+
+    function loadChargePoints(map) {
+      var bounds = map.map.getBounds();
+
+      if (!intersectsUK(bounds)) {
+        alert("You cannot search outside the UK.");
+        return;
+      }
+
+      var ne = bounds.getNorthEast()
+      var sw = bounds.getSouthWest()
+
+      var queryParams = "value.ChargeDeviceLocation:IN:{" +
+        ' north:'+ne.lat() +
+        ' east:'+ne.lng() +
+        ' south:'+sw.lat() +
+        ' west:'+sw.lng() +
+      ' }';
+
+      if (minkW > 0) {
+        queryParams += " AND value.Connector.RatedOutputkW:["+minkW+" TO *]"
+      }
+
+      if (twentyFourHrsOnly) {
+        queryParams += " AND value.Accessible24Hours:true"
+      }
+
+      if (freeOnly) {
+        queryParams += " AND value.PaymentRequiredFlag:false"
+      }
+
+      chargePointsApi.params =  {
+                                  //"sort": "value.ChargeDeviceLocation:distance:asc",
+                                  "limit": "100",
+                                  "query": queryParams
+                                };
+
+      spinner.active = true;
+      chargePointsApi.go();
+    }
+
+    function jsonReplacer(key, value) {
+      if (value === null) {
+        return undefined;
+      }
+      return value;
+    }
+
+    document.getElementById('refresh').addEventListener('click', function () {
+      clear();
+      loadChargePoints(map);
+    });
+
+    document.getElementById('locate').addEventListener('click', function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(geo) {
+          if (inUK(geo.coords)) {
+            clear();
+            map.latitude = geo.coords.latitude;
+            map.longitude = geo.coords.longitude;
+            map.zoom = 15;
+          } else {
+            alert("You cannot search outside the UK.");
+          }
+        });
+      }
+    });
+
+    drawerToggleButton.addEventListener('click', function(e) {
+      drawer.togglePanel();
+    });
+  </script>
+</body>
+
+</html>

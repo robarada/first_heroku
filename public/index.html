@@ -1,0 +1,93 @@
+<html lang="en" ng-app="StarterApp">
+  <head>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.css">
+	<link rel="stylesheet" href="style.css">
+	<link href="css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css" />
+	<script src="https://maps.googleapis.com/maps/api/js"></script>
+	<script type="text/javascript" src="http://coinatmradar.com/js/markerclusterer.min.20140301.js"></script>
+	
+	   <script>
+      function initialize() {
+        var mapCanvas = document.getElementById('map-canvas');
+        var mapOptions = {
+          center: new google.maps.LatLng(37.09024, -95.712891),
+          zoom: 5,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(mapCanvas, mapOptions)
+      }
+	  
+	  
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body layout="column" ng-controller="NavCtrl">
+
+  
+    <md-toolbar layout="row">
+      <h1 class="text_enlarge">Zokos</h1>
+	  <div layout="column" layout-align="center center" class="login">
+  <md-select ng-model="someVal">
+    <md-option value="1">Login</md-option>
+    <md-option value="2">Profile</md-option>
+	<md-option value="3">Contact Us</md-option>
+  </md-select>
+</div>
+    </md-toolbar>
+    <div layout="row" flex>
+        <div layout="column" flex id="content">
+            <md-content layout="column" flex class="md-padding">
+			<div id="map-canvas"></div>
+			
+            </md-content>
+        </div>
+        <md-sidenav layout="column" class="md-sidenav-right md-whiteframe-z2" md-component-id="right" md-is-locked-open="$media('gt-sm')">
+			<md-toolbar class="md-theme-light md-accent">
+				<h1 class="md-toolbar-tools">Results</h1> 
+				
+			</md-toolbar>
+			<div ng-controller="AppCtrl">
+  <md-content>
+    <md-list>
+      <md-item ng-repeat="item in todos | orderBy:'who'">
+        <md-item-content>
+          <div class="md-tile-left">
+              <img ng-src="{{item.face}}" class="face" alt="{{item.who}}">
+          </div>
+		  <div class="topcorner">
+		  
+				<i class="mdi mdi-account">
+					<md-tooltip>
+						Profile
+					</md-tooltip>
+				</i>
+				<i class="mdi mdi-email" >
+					<md-tooltip>
+						Message
+					</md-tooltip>
+				</i>
+           
+          </div>
+          <div class="md-tile-content">
+            <h3>{{item.what}}</h3>
+            <h4>{{item.who | currency}}/hour</h4>
+            <p>
+              Tags: {{item.notes}}
+            </p>
+          </div>
+        </md-item-content>
+		<md-divider inset> </md-divider>
+      </md-item>
+    </md-list>
+  </md-content>
+</div> 
+        </md-sidenav>
+    </div>
+    <!-- Angular Material Dependencies -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-animate.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-aria.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.js"></script>
+	<script src="app.js"></script>
+  </body>
+</html>
